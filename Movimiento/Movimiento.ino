@@ -1,5 +1,6 @@
 #include <ESP_FlexyStepper.h>
 
+const int iman = 12;
 const int MOTOR_X_STEP_PIN = 16;
 const int MOTOR_X_DIRECTION_PIN = 17;
 const int LIMIT_X_SWITCH_PIN = 13;
@@ -8,6 +9,7 @@ ESP_FlexyStepper stepper_X;
 void setup()
 {
   Serial.begin(115200);
+  pinMode(iman, INPUT_PULLUP);
 
   // HOME
   stepper_X.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
@@ -52,15 +54,16 @@ void botella(float numero)
   while (!stepper_X.motionComplete())
   {
     stepper_X.processMovement();
+    buscar_botella(numero);
   }
 }
-/*
-**POSICION DE CADA BOTELLA
-*botella1(173);
 
-** botella2(123);
-
-*** botella3 (73);
-
-**** botella4(23);
-*/
+void buscar_botella(int botella)
+{
+  if(digitalRead(iman)==HIGH){
+    Serial.println("iman detect");
+  }
+  else{
+    Serial.println("not iman");
+  }
+}
