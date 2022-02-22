@@ -57,8 +57,8 @@ void sbotella(int numero_botella)
 {
 
   stepper_X.setSpeedInStepsPerSecond(80);
-  stepper_X.setAccelerationInStepsPerSecondPerSecond(200);
-  stepper_X.setDecelerationInStepsPerSecondPerSecond(500);
+  stepper_X.setAccelerationInStepsPerSecondPerSecond(100);
+  stepper_X.setDecelerationInStepsPerSecondPerSecond(400);
   if(numero_botella>=3){
      stepper_X.setTargetPositionInSteps(-200);
   }else
@@ -82,9 +82,9 @@ void sbotella(int numero_botella)
 
 void gohome()
 {
-  stepper_X.setSpeedInStepsPerSecond(50);
+  stepper_X.setSpeedInStepsPerSecond(30);
   stepper_X.setAccelerationInStepsPerSecondPerSecond(50);
-  stepper_X.setDecelerationInStepsPerSecondPerSecond(80);
+  stepper_X.setDecelerationInStepsPerSecondPerSecond(50);
 
   if (stepper_X.moveToHomeInSteps(-1, 5, 200, LIMIT_X_SWITCH_PIN) == true)
   {
