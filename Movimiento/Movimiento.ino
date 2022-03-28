@@ -80,8 +80,6 @@ void botella(float numero)
   while (!stepper_FUNNEL.motionComplete())
   {
     stepper_FUNNEL.processMovement();
-    // buscar_botella(numero);
-    // stepper_FUNNEL.processMovement();
   }
   delay(1000);
 
@@ -89,8 +87,6 @@ void botella(float numero)
   while (!stepper_FUNNEL.motionComplete())
   {
     stepper_FUNNEL.processMovement();
-    // buscar_botella(numero);
-    // stepper_FUNNEL.processMovement();
   }
 }
 
