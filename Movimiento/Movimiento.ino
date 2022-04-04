@@ -2,7 +2,7 @@
 
 int countiman = 0;
 int detect_iman;
-
+boolean state_botellas[] = {0, 0, 0, 0};
 const int iman = 12;
 const int MOTOR_X_STEP_PIN = 16;
 const int MOTOR_X_DIRECTION_PIN = 17;
@@ -43,15 +43,13 @@ void loop()
 
 void botella(float numero)
 {
-  // Serial.println(numero);
-  //  LA DISTANCIA ENTRE CADA BOTELLA SON 50 PASOS
-  //  EL CICLO FOR RESTA 5 Y REPITE EL NUMERO DE LA FUNCION SUPERIOR
-  //  ASI SE DETERMINA LA POSICION DE FORMA AUTOMATICA
+  int change;
+  change = (int)numero;
+  Serial.println(state_botellas[change]);
   double movimiento = 172;
   for (int i = 0; i < numero; i++)
   {
     movimiento = movimiento - 50;
-    // Serial.println(movimiento);
   }
   stepper_X.setSpeedInStepsPerSecond(180);
   stepper_X.setAccelerationInStepsPerSecondPerSecond(200);
@@ -61,12 +59,11 @@ void botella(float numero)
   {
     stepper_X.processMovement();
   }
-  // detect_iman=false;
   delay(2000);
   buscar_botella(numero);
   delay(1000);
 
-  if (detect_iman == true)
+  if (detect_iman == true && state_botellas[change] == 0)
   {
     stepper_FUNNEL.setSpeedInStepsPerSecond(100);
     stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
@@ -77,7 +74,7 @@ void botella(float numero)
       stepper_FUNNEL.processMovement();
     }
     delay(1000);
-
+    state_botellas[change] = 1;
     stepper_FUNNEL.moveRelativeInMillimeters(15);
     while (!stepper_FUNNEL.motionComplete())
     {
@@ -89,7 +86,6 @@ void botella(float numero)
 void buscar_botella(int botella)
 {
   Serial.println("searchiman");
-
   if (digitalRead(iman) == HIGH)
   {
     Serial.println("iman detect");
@@ -98,7 +94,7 @@ void buscar_botella(int botella)
   else
   {
     Serial.println("not detect");
-    detect_iman=false;
+    detect_iman = false;
   }
 }
 void gohome()
