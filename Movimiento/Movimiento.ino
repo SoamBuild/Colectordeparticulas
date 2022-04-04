@@ -47,15 +47,15 @@ void botella(float numero)
   //  LA DISTANCIA ENTRE CADA BOTELLA SON 50 PASOS
   //  EL CICLO FOR RESTA 5 Y REPITE EL NUMERO DE LA FUNCION SUPERIOR
   //  ASI SE DETERMINA LA POSICION DE FORMA AUTOMATICA
-  double movimiento = 171;
+  double movimiento = 172;
   for (int i = 0; i < numero; i++)
   {
     movimiento = movimiento - 50;
     // Serial.println(movimiento);
   }
-  stepper_X.setSpeedInStepsPerSecond(200);
-  stepper_X.setAccelerationInStepsPerSecondPerSecond(300);
-  stepper_X.setDecelerationInStepsPerSecondPerSecond(800);
+  stepper_X.setSpeedInStepsPerSecond(180);
+  stepper_X.setAccelerationInStepsPerSecondPerSecond(200);
+  stepper_X.setDecelerationInStepsPerSecondPerSecond(700);
   stepper_X.setTargetPositionInSteps(-movimiento);
   while (!stepper_X.motionComplete())
   {
