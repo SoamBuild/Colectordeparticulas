@@ -7,7 +7,7 @@ const int LIMIT_X_SWITCH_PIN = 13;
 
 const int MOTOR_F_STEP_PIN = 26;
 const int MOTOR_F_DIRECTION_PIN = 27;
-// const int LIMIT_FUNNEL_SWITCH_PIN = 13;
+const int LIMIT_FUNNEL_SWITCH_PIN = 14;
 ESP_FlexyStepper stepper_X;
 ESP_FlexyStepper stepper_FUNNEL;
 
@@ -15,27 +15,7 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(iman, INPUT_PULLUP);
-
-  // HOME
-  stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
-  stepper_X.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
-  stepper_FUNNEL.setSpeedInStepsPerSecond(50);
-  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
-  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
-
-  pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
-  stepper_X.setSpeedInStepsPerSecond(50);
-  stepper_X.setAccelerationInStepsPerSecondPerSecond(50);
-  stepper_X.setDecelerationInStepsPerSecondPerSecond(80);
-
-  if (stepper_X.moveToHomeInSteps(-1, 5, 200, LIMIT_X_SWITCH_PIN) == true)
-  {
-    Serial.println("HOME OK");
-  }
-  else
-  {
-    Serial.println("HOME ERROR");
-  }
+  gohome();
 }
 void loop()
 {
@@ -76,14 +56,14 @@ void botella(float numero)
   stepper_FUNNEL.setSpeedInStepsPerSecond(100);
   stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
   stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
-  stepper_FUNNEL.moveRelativeInMillimeters(-10);
+  stepper_FUNNEL.moveRelativeInMillimeters(-15);
   while (!stepper_FUNNEL.motionComplete())
   {
     stepper_FUNNEL.processMovement();
   }
   delay(1000);
 
-  stepper_FUNNEL.moveRelativeInMillimeters(10);
+  stepper_FUNNEL.moveRelativeInMillimeters(15);
   while (!stepper_FUNNEL.motionComplete())
   {
     stepper_FUNNEL.processMovement();
@@ -100,4 +80,30 @@ void buscar_botella(int botella)
   {
     Serial.println("not iman");
   }
+}
+void gohome(){
+  
+  // HOME
+  Serial.println("HOME BOTELLA ...");
+  stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
+  stepper_X.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
+  stepper_FUNNEL.setSpeedInStepsPerSecond(50);
+  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
+  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
+
+  pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
+  stepper_X.setSpeedInStepsPerSecond(50);
+  stepper_X.setAccelerationInStepsPerSecondPerSecond(50);
+  stepper_X.setDecelerationInStepsPerSecondPerSecond(80);
+
+  if (stepper_X.moveToHomeInSteps(-1, 5, 200, LIMIT_X_SWITCH_PIN) == true)
+  {
+    Serial.println("HOME BOTELLA OK");
+  }
+  else
+  {
+    Serial.println("HOME ERROR!");
+    gohome();
+  }
+
 }
