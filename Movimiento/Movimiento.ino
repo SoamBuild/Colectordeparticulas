@@ -1,7 +1,7 @@
 #include <ESP_FlexyStepper.h>
 
 int countiman = 0;
-int detect_iman = true;
+int detect_iman;
 
 const int iman = 12;
 const int MOTOR_X_STEP_PIN = 16;
@@ -26,7 +26,7 @@ void setup()
   stepper_FUNNEL.setSpeedInStepsPerSecond(50);
   stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
   stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
-  
+
   gohome();
 }
 void loop()
@@ -65,20 +65,24 @@ void botella(float numero)
   delay(2000);
   buscar_botella(numero);
   delay(1000);
-  stepper_FUNNEL.setSpeedInStepsPerSecond(100);
-  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
-  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
-  stepper_FUNNEL.moveRelativeInMillimeters(-15);
-  while (!stepper_FUNNEL.motionComplete())
-  {
-    stepper_FUNNEL.processMovement();
-  }
-  delay(1000);
 
-  stepper_FUNNEL.moveRelativeInMillimeters(15);
-  while (!stepper_FUNNEL.motionComplete())
+  if (detect_iman == true)
   {
-    stepper_FUNNEL.processMovement();
+    stepper_FUNNEL.setSpeedInStepsPerSecond(100);
+    stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
+    stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
+    stepper_FUNNEL.moveRelativeInMillimeters(-15);
+    while (!stepper_FUNNEL.motionComplete())
+    {
+      stepper_FUNNEL.processMovement();
+    }
+    delay(1000);
+
+    stepper_FUNNEL.moveRelativeInMillimeters(15);
+    while (!stepper_FUNNEL.motionComplete())
+    {
+      stepper_FUNNEL.processMovement();
+    }
   }
 }
 
@@ -94,6 +98,7 @@ void buscar_botella(int botella)
   else
   {
     Serial.println("not detect");
+    detect_iman=false;
   }
 }
 void gohome()
