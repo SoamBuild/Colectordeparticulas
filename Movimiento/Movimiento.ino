@@ -1,5 +1,8 @@
 #include <ESP_FlexyStepper.h>
 
+int countiman = 0;
+int detect_iman = true;
+
 const int iman = 12;
 const int MOTOR_X_STEP_PIN = 16;
 const int MOTOR_X_DIRECTION_PIN = 17;
@@ -15,12 +18,20 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(iman, INPUT_PULLUP);
+  pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
+
+  stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
+  stepper_X.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
+
+  stepper_FUNNEL.setSpeedInStepsPerSecond(50);
+  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
+  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
+  
   gohome();
 }
 void loop()
 {
   botella(0);
-
   delay(1000);
   botella(1);
   delay(1000);
@@ -32,10 +43,10 @@ void loop()
 
 void botella(float numero)
 {
-  Serial.println(numero);
-  // LA DISTANCIA ENTRE CADA BOTELLA SON 50 PASOS
-  // EL CICLO FOR RESTA 5 Y REPITE EL NUMERO DE LA FUNCION SUPERIOR
-  // ASI SE DETERMINA LA POSICION DE FORMA AUTOMATICA
+  // Serial.println(numero);
+  //  LA DISTANCIA ENTRE CADA BOTELLA SON 50 PASOS
+  //  EL CICLO FOR RESTA 5 Y REPITE EL NUMERO DE LA FUNCION SUPERIOR
+  //  ASI SE DETERMINA LA POSICION DE FORMA AUTOMATICA
   double movimiento = 171;
   for (int i = 0; i < numero; i++)
   {
@@ -49,10 +60,11 @@ void botella(float numero)
   while (!stepper_X.motionComplete())
   {
     stepper_X.processMovement();
-    // buscar_botella(numero);
-    // stepper_FUNNEL.processMovement();
   }
-
+  // detect_iman=false;
+  delay(2000);
+  buscar_botella(numero);
+  delay(1000);
   stepper_FUNNEL.setSpeedInStepsPerSecond(100);
   stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
   stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
@@ -72,26 +84,21 @@ void botella(float numero)
 
 void buscar_botella(int botella)
 {
+  Serial.println("searchiman");
+
   if (digitalRead(iman) == HIGH)
   {
     Serial.println("iman detect");
+    detect_iman = true;
   }
   else
   {
-    Serial.println("not iman");
+    Serial.println("not detect");
   }
 }
-void gohome(){
-  
-  // HOME
+void gohome()
+{
   Serial.println("HOME BOTELLA ...");
-  stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
-  stepper_X.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
-  stepper_FUNNEL.setSpeedInStepsPerSecond(50);
-  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
-  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
-
-  pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
   stepper_X.setSpeedInStepsPerSecond(50);
   stepper_X.setAccelerationInStepsPerSecondPerSecond(50);
   stepper_X.setDecelerationInStepsPerSecondPerSecond(80);
@@ -105,5 +112,4 @@ void gohome(){
     Serial.println("HOME ERROR!");
     gohome();
   }
-
 }
