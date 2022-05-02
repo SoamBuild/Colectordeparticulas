@@ -1,0 +1,6 @@
+{
+    "port": "COM3",
+    "configuration": "PartitionScheme=default,FlashMode=qio,FlashFreq=80,UploadSpeed=921600,DebugLevel=none",
+    "board": "esp32:esp32:esp32wrover",
+    "sketch": "MemoryAction\\MemoryAction.ino"
+}
