@@ -17,6 +17,8 @@
 #include "SPI.h"
 //#include <Function_SD.ino>
 int id = 0;
+int data[7];
+String myString ="";
 void setup() {
 
 
@@ -34,16 +36,18 @@ void setup() {
   }
 
   readFile(SD, "/datatemp.txt");
-  writeFile(SD, "/Data.txt", "ID,Time,Stage,B1,B2,B3,B4\n");
+ // writeFile(SD, "/Data.txt", "ID,Time,Stage,B1,B2,B3,B4\n");
 
 }
 
 
 void loop() {
+ /*
   id = id + 1;
   String tosave = String(id) + ",000000,3,0,1,0,2\n";
   delay(1000); 
   appendFile(SD, "/Data.txt", tosave.c_str());
   Serial.println(String(id) + ",000000,3,0,1,0,2\n");
   writeFile(SD, "/dataTemp.txt", tosave.c_str());
+  */
 }
