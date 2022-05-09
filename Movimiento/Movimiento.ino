@@ -6,6 +6,8 @@
 #include "SPI.h"
 
 
+String myString,timed; //timestap desde memoria 
+int id, stage; //id de sesion memoria y id stage;
 
 int countiman = 0;
 int detect_iman;
