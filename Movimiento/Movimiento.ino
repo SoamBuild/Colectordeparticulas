@@ -27,6 +27,7 @@ void setup()
 {
   Serial.begin(115200);
   //Montando Memoria
+  
   if (!SD.begin()) {
     Serial.println("Sd no montada ");
     return;
@@ -36,6 +37,7 @@ void setup()
     Serial.println("No identificada");
     return;
   }
+  
   pinMode(iman, INPUT_PULLUP);
   pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
 
@@ -49,6 +51,7 @@ void setup()
   //Leer y actualizar valores
   readFile(SD, "/datatemp.txt");
   id = id + 1;
+  
   gohome();
 }
 void loop()
@@ -65,6 +68,7 @@ void loop()
 
 void botella(float numero)
 {
+  stage=0;
   int change;
   change = (int)numero;
   Serial.println(state_botellas[change]);
@@ -77,6 +81,8 @@ void botella(float numero)
   stepper_X.setAccelerationInStepsPerSecondPerSecond(200);
   stepper_X.setDecelerationInStepsPerSecondPerSecond(700);
   stepper_X.setTargetPositionInSteps(-movimiento);
+ 
+
   while (!stepper_X.motionComplete())
   {
     stepper_X.processMovement();
@@ -84,10 +90,12 @@ void botella(float numero)
   delay(2000);
   buscar_botella(numero);
   delay(1000);
+  stage=1;
+  toregistry();
 
   if (detect_iman == true && state_botellas[change] == 0)
   {
-    stepper_FUNNEL.setSpeedInStepsPerSecond(100);
+    stepper_FUNNEL.setSpeedInStepsPerSecond(150);
     stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
     stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
     stepper_FUNNEL.moveRelativeInMillimeters(-15);
@@ -95,6 +103,8 @@ void botella(float numero)
     {
       stepper_FUNNEL.processMovement();
     }
+    stage=2;
+    toregistry();
     delay(1000);
     state_botellas[change] = 1;
     stepper_FUNNEL.moveRelativeInMillimeters(15);
@@ -102,6 +112,8 @@ void botella(float numero)
     {
       stepper_FUNNEL.processMovement();
     }
+    stage=3;
+    toregistry();
   }
 }
 
@@ -135,4 +147,12 @@ void gohome()
     Serial.println("HOME ERROR!");
     gohome();
   }
+}
+void toregistry(){
+  String tosave = String(id) + ",000000,"+String(stage)+",0,1,0,2\n";
+  appendFile(SD, "/Data.txt", tosave.c_str());
+  writeFile(SD, "/dataTemp.txt", tosave.c_str());
+
+  
+
 }
