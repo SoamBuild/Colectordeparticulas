@@ -26,6 +26,16 @@ ESP_FlexyStepper stepper_FUNNEL;
 void setup()
 {
   Serial.begin(115200);
+  //Montando Memoria
+  if (!SD.begin()) {
+    Serial.println("Sd no montada ");
+    return;
+  }
+  uint8_t cardType = SD.cardType();
+  if (cardType == CARD_NONE) {
+    Serial.println("No identificada");
+    return;
+  }
   pinMode(iman, INPUT_PULLUP);
   pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
 
@@ -35,7 +45,10 @@ void setup()
   stepper_FUNNEL.setSpeedInStepsPerSecond(50);
   stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
   stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
-
+  
+  //Leer y actualizar valores
+  readFile(SD, "/datatemp.txt");
+  id = id + 1;
   gohome();
 }
 void loop()
