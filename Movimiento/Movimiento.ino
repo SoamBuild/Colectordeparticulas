@@ -1,4 +1,12 @@
+//libreria de motor 
 #include <ESP_FlexyStepper.h>
+//Librerias de memoria 
+#include "FS.h"
+#include "SD.h"
+#include "SPI.h"
+
+
+
 int countiman = 0;
 int detect_iman;
 boolean state_botellas[] = {0, 0, 0, 0};
