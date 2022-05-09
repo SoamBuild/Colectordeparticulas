@@ -67,11 +67,12 @@ void readFile(fs::FS &fs, const char * path) {
   Serial.println(id);
   Serial.println(timed);
   Serial.println(stage);
+  /*
   Serial.println(b1);
   Serial.println(b2);
   Serial.println(b3);
   Serial.println(b4);
-  
+  */
   file.close();
 }
 
