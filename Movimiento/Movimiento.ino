@@ -1,5 +1,4 @@
 #include <ESP_FlexyStepper.h>
-
 int countiman = 0;
 int detect_iman;
 boolean state_botellas[] = {0, 0, 0, 0};
