@@ -48,14 +48,45 @@ void readFile(fs::FS &fs, const char * path) {
     return;
   }
 
-  Serial.print("Read from file: ");
+  Serial.println("Read from file: ");
   while (file.available()) {
-    char hola = file.read();
-    myString = String(hola);
+    myString = file.readStringUntil('\n');
+
   }
 
+  id = getValor(myString, ',', 0).toInt();
+  timed = getValor(myString, ',', 1);
+  stage = getValor(myString, ',', 2).toInt();
+  b1 = getValor(myString, ',', 3).toInt();
+  b2 = getValor(myString, ',', 4).toInt();
+  b3 = getValor(myString, ',', 5).toInt();
+  b4 = getValor(myString, ',', 6).toInt();
 
+  Serial.println(id);
+  Serial.println(timed);
+  Serial.println(stage);
+  Serial.println(b1);
+  Serial.println(b2);
+  Serial.println(b3);
+  Serial.println(b4);
+  
   file.close();
+}
+
+String getValor(String data, char separator, int index) {
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++) {
+    if (data.charAt(i) == separator || i == maxIndex) {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 /*
   char str[] = "uno;dos;tres;cuatro;";
