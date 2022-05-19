@@ -104,6 +104,7 @@ void botella(int numero)
     toregistry(stage);
     delay(1000);
     state_botellas[numero] = 1;
+    Serial.println("Estado de botella: "+ String(state_botellas[numero]));
     stepper_FUNNEL.moveRelativeInMillimeters(15);
     while (!stepper_FUNNEL.motionComplete())
     {
@@ -151,7 +152,7 @@ void gohome()
 }
 void toregistry(int stage) {
   Serial.println("Guardando etapa: " + String(stage));
-  String tosave = String(id) + ",000000," + String(stage) + ",0,1,0,2\n";
+  String tosave = String(id) + ",000000," + String(stage)+","+String(state_botellas[1])+","+String(state_botellas[2])+","+String(state_botellas[3])+","+String(state_botellas[4])+"\n";
   appendFile(SD, "/Data.txt", tosave.c_str());
   writeFile(SD, "/dataTemp.txt", tosave.c_str());
 
