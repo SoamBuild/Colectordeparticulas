@@ -1,12 +1,12 @@
-//libreria de motor 
+//libreria de motor
 #include <ESP_FlexyStepper.h>
-//Librerias de memoria 
+//Librerias de memoria
 #include "FS.h"
 #include "SD.h"
 #include "SPI.h"
 
 
-String myString,timed; //timestap desde memoria 
+String myString, timed; //timestap desde memoria
 int id, stage; //id de sesion memoria y id stage;
 
 int countiman = 0;
@@ -27,7 +27,7 @@ void setup()
 {
   Serial.begin(115200);
   //Montando Memoria
-  
+
   if (!SD.begin()) {
     Serial.println("Sd no montada ");
     return;
@@ -37,7 +37,7 @@ void setup()
     Serial.println("No identificada");
     return;
   }
-  
+
   pinMode(iman, INPUT_PULLUP);
   pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
 
@@ -47,11 +47,11 @@ void setup()
   stepper_FUNNEL.setSpeedInStepsPerSecond(50);
   stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(50);
   stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(80);
-  
+
   //Leer y actualizar valores
   readFile(SD, "/datatemp.txt");
   id = id + 1;
-  
+
   gohome();
 }
 void loop()
@@ -68,10 +68,10 @@ void loop()
 
 void botella(float numero)
 {
-  stage=0;
+  stage = 0;
   int change;
   change = (int)numero;
- // Serial.println(state_botellas[change]);
+  // Serial.println(state_botellas[change]);
   double movimiento = 172;
   for (int i = 0; i < numero; i++)
   {
@@ -81,7 +81,7 @@ void botella(float numero)
   stepper_X.setAccelerationInStepsPerSecondPerSecond(200);
   stepper_X.setDecelerationInStepsPerSecondPerSecond(700);
   stepper_X.setTargetPositionInSteps(-movimiento);
-  Serial.println("Movimiento botella: "+ String(numero));
+  Serial.println("Movimiento botella: " + String(numero));
   while (!stepper_X.motionComplete())
   {
     stepper_X.processMovement();
@@ -89,12 +89,12 @@ void botella(float numero)
   delay(2000);
   buscar_botella(numero);
   delay(1000);
-  stage=1;
-  toregistry();
+  stage = 1;
+  toregistry(stage);
 
   if (detect_iman == true && state_botellas[change] == 0)
   {
-    Serial.println("Bajando embudo en botella:"+String(numero));
+    Serial.println("Bajando embudo en botella:" + String(numero));
     stepper_FUNNEL.setSpeedInStepsPerSecond(150);
     stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
     stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
@@ -103,8 +103,8 @@ void botella(float numero)
     {
       stepper_FUNNEL.processMovement();
     }
-    stage=2;
-    toregistry();
+    stage = 2;
+    toregistry(stage);
     delay(1000);
     state_botellas[change] = 1;
     stepper_FUNNEL.moveRelativeInMillimeters(15);
@@ -112,8 +112,8 @@ void botella(float numero)
     {
       stepper_FUNNEL.processMovement();
     }
-    stage=3;
-    toregistry();
+    stage = 3;
+    toregistry(stage);
   }
 }
 
@@ -128,10 +128,10 @@ void buscar_botella(int botella)
   else
   {
 
-    Serial.println("not detect");
+    Serial.println("### Iman no encontrado ###");
     detect_iman = false;
-    if(state_botellas[botella] == 0){
-    gohome();
+    if (state_botellas[botella] == 0) {
+      gohome();
     }
   }
 }
@@ -152,11 +152,12 @@ void gohome()
     gohome();
   }
 }
-void toregistry(){
-  String tosave = String(id) + ",000000,"+String(stage)+",0,1,0,2\n";
+void toregistry(int stage) {
+  Serial.println("Guardando etapa: " + String(stage));
+  String tosave = String(id) + ",000000," + String(stage) + ",0,1,0,2\n";
   appendFile(SD, "/Data.txt", tosave.c_str());
   writeFile(SD, "/dataTemp.txt", tosave.c_str());
 
-  
+
 
 }
