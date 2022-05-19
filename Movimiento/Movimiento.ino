@@ -119,6 +119,7 @@ void botella(float numero)
 
 void buscar_botella(int botella)
 {
+  Serial.println(botella);
   Serial.println("searchiman");
   if (digitalRead(iman) == HIGH)
   {
@@ -127,8 +128,12 @@ void buscar_botella(int botella)
   }
   else
   {
-        Serial.println("not detect");
+
+    Serial.println("not detect");
     detect_iman = false;
+    if(state_botellas[botella] == 0){
+    gohome();
+    }
   }
 }
 void gohome()
