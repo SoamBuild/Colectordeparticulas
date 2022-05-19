@@ -71,7 +71,7 @@ void botella(float numero)
   stage=0;
   int change;
   change = (int)numero;
-  Serial.println(state_botellas[change]);
+ // Serial.println(state_botellas[change]);
   double movimiento = 172;
   for (int i = 0; i < numero; i++)
   {
@@ -81,8 +81,7 @@ void botella(float numero)
   stepper_X.setAccelerationInStepsPerSecondPerSecond(200);
   stepper_X.setDecelerationInStepsPerSecondPerSecond(700);
   stepper_X.setTargetPositionInSteps(-movimiento);
- 
-
+  Serial.println("Movimiento botella: "+ String(numero));
   while (!stepper_X.motionComplete())
   {
     stepper_X.processMovement();
@@ -95,6 +94,7 @@ void botella(float numero)
 
   if (detect_iman == true && state_botellas[change] == 0)
   {
+    Serial.println("Bajando embudo en botella:"+String(numero));
     stepper_FUNNEL.setSpeedInStepsPerSecond(150);
     stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
     stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
@@ -119,11 +119,10 @@ void botella(float numero)
 
 void buscar_botella(int botella)
 {
-  Serial.println(botella);
-  Serial.println("searchiman");
+  Serial.println("Buscando iman de:" + String(botella));
   if (digitalRead(iman) == HIGH)
   {
-    Serial.println("iman detect");
+    //Serial.println("iman detect");
     detect_iman = true;
   }
   else
@@ -145,7 +144,7 @@ void gohome()
 
   if (stepper_X.moveToHomeInSteps(-1, 5, 200, LIMIT_X_SWITCH_PIN) == true)
   {
-    Serial.println("HOME BOTELLA OK");
+    //Serial.println("HOME BOTELLA OK");
   }
   else
   {
