@@ -66,12 +66,9 @@ void loop()
   delay(1000);
 }
 
-void botella(float numero)
+void botella(int numero)
 {
   stage = 0;
-  int change;
-  change = (int)numero;
-  // Serial.println(state_botellas[change]);
   double movimiento = 172;
   for (int i = 0; i < numero; i++)
   {
@@ -92,7 +89,7 @@ void botella(float numero)
   stage = 1;
   toregistry(stage);
 
-  if (detect_iman == true && state_botellas[change] == 0)
+  if (detect_iman == true && state_botellas[numero] == 0)
   {
     Serial.println("Bajando embudo en botella:" + String(numero));
     stepper_FUNNEL.setSpeedInStepsPerSecond(150);
@@ -106,7 +103,7 @@ void botella(float numero)
     stage = 2;
     toregistry(stage);
     delay(1000);
-    state_botellas[change] = 1;
+    state_botellas[numero] = 1;
     stepper_FUNNEL.moveRelativeInMillimeters(15);
     while (!stepper_FUNNEL.motionComplete())
     {
