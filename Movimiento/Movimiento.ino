@@ -12,14 +12,14 @@ int id, stage; //id de sesion memoria y id stage;
 int countiman = 0;
 int detect_iman;
 boolean state_botellas[] = {0, 0, 0, 0};
-const int iman = 12;
-const int MOTOR_X_STEP_PIN = 16;
-const int MOTOR_X_DIRECTION_PIN = 17;
+const int iman = 16;
+const int MOTOR_X_STEP_PIN = 27;
+const int MOTOR_X_DIRECTION_PIN = 14;
 const int LIMIT_X_SWITCH_PIN = 13;
 
-const int MOTOR_F_STEP_PIN = 26;
-const int MOTOR_F_DIRECTION_PIN = 27;
-const int LIMIT_FUNNEL_SWITCH_PIN = 14;
+const int MOTOR_F_STEP_PIN = 33;
+const int MOTOR_F_DIRECTION_PIN = 32;
+const int LIMIT_FUNNEL_SWITCH_PIN = 15;
 ESP_FlexyStepper stepper_X;
 ESP_FlexyStepper stepper_FUNNEL;
 
