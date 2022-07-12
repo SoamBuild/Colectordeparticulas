@@ -13,18 +13,22 @@ int countiman = 0;
 int detect_iman;
 boolean state_botellas[] = {0, 0, 0, 0};
 const int iman = 16;
-const int MOTOR_X_STEP_PIN = 27;
-const int MOTOR_X_DIRECTION_PIN = 14;
+const int MOTOR_X_STEP_PIN = 33;
+const int MOTOR_X_DIRECTION_PIN = 32;
 const int LIMIT_X_SWITCH_PIN = 13;
 
-const int MOTOR_F_STEP_PIN = 33;
-const int MOTOR_F_DIRECTION_PIN = 32;
+const int MOTOR_F_STEP_PIN = 27;
+const int MOTOR_F_DIRECTION_PIN = 14;
 const int LIMIT_FUNNEL_SWITCH_PIN = 15;
 ESP_FlexyStepper stepper_X;
 ESP_FlexyStepper stepper_FUNNEL;
 
 void setup()
+
 {
+  pinMode(26,OUTPUT);
+  digitalWrite(26,HIGH);
+  
   Serial.begin(115200);
   //Montando Memoria
 
@@ -52,7 +56,7 @@ void setup()
   readFile(SD, "/datatemp.txt");
   id = id + 1;
 
-  gohome();
+ gohome();
 }
 void loop()
 {
@@ -83,7 +87,9 @@ void botella(int numero)
   {
     stepper_X.processMovement();
   }
+  
   delay(2000);
+  
   buscar_botella(numero);
   delay(1000);
   stage = 1;
@@ -113,14 +119,18 @@ void botella(int numero)
     stage = 3;
     toregistry(stage);
   }
+  if(state_botellas[numero]==1){
+    Serial.println("Botella: " +String(numero)+ " Completada");
+  }
+  
 }
 
 void buscar_botella(int botella)
 {
-  Serial.println("Buscando iman de:" + String(botella));
+  Serial.println("Buscando iman de: " + String(botella));
   if (digitalRead(iman) == HIGH)
   {
-    //Serial.println("iman detect");
+    Serial.println("iman Detectado, esperando embudo");
     detect_iman = true;
   }
   else
@@ -128,16 +138,19 @@ void buscar_botella(int botella)
 
     Serial.println("### Iman no encontrado ###");
     detect_iman = false;
+    gohome();
+    /*
     if (state_botellas[botella] == 0) {
       gohome();
     }
+    */
   }
 }
 void gohome()
 {
   Serial.println("HOME BOTELLA ...");
-  stepper_X.setSpeedInStepsPerSecond(50);
-  stepper_X.setAccelerationInStepsPerSecondPerSecond(50);
+  stepper_X.setSpeedInStepsPerSecond(90);
+  stepper_X.setAccelerationInStepsPerSecondPerSecond(100);
   stepper_X.setDecelerationInStepsPerSecondPerSecond(80);
 
   if (stepper_X.moveToHomeInSteps(-1, 5, 200, LIMIT_X_SWITCH_PIN) == true)
