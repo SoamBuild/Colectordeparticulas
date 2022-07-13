@@ -97,7 +97,7 @@ void botella(int numero)
 
   if (detect_iman == true && state_botellas[numero] == 0)
   {
-    Serial.println("Bajando embudo en botella:" + String(numero));
+    Serial.println("Bajando embudo en botella: " + String(numero));
     stepper_FUNNEL.setSpeedInStepsPerSecond(150);
     stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(300);
     stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(800);
