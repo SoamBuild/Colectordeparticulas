@@ -91,3 +91,9 @@ String getValor(String data, char separator, int index) {
 
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
+void toregistry(int stage) {
+  Serial.println("Guardando etapa: " + String(stage));
+  String tosave = String(id) + ",000000," + String(stage)+","+String(state_botellas[1])+","+String(state_botellas[2])+","+String(state_botellas[3])+","+String(state_botellas[4])+"\n";
+  appendFile(SD, "/Data.txt", tosave.c_str());
+  writeFile(SD, "/dataTemp.txt", tosave.c_str());
+}

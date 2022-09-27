@@ -146,29 +146,3 @@ void buscar_botella(int botella)
     */
   }
 }
-void gohome()
-{
-  Serial.println("HOME BOTELLA ...");
-  stepper_X.setSpeedInStepsPerSecond(90);
-  stepper_X.setAccelerationInStepsPerSecondPerSecond(100);
-  stepper_X.setDecelerationInStepsPerSecondPerSecond(80);
-
-  if (stepper_X.moveToHomeInSteps(-1, 5, 200, LIMIT_X_SWITCH_PIN) == true)
-  {
-    //Serial.println("HOME BOTELLA OK");
-  }
-  else
-  {
-    Serial.println("HOME ERROR!");
-    gohome();
-  }
-}
-void toregistry(int stage) {
-  Serial.println("Guardando etapa: " + String(stage));
-  String tosave = String(id) + ",000000," + String(stage)+","+String(state_botellas[1])+","+String(state_botellas[2])+","+String(state_botellas[3])+","+String(state_botellas[4])+"\n";
-  appendFile(SD, "/Data.txt", tosave.c_str());
-  writeFile(SD, "/dataTemp.txt", tosave.c_str());
-
-
-
-}
