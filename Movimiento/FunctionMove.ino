@@ -32,3 +32,6 @@ void MOVE_FUNNEL(int distance, int botella)
   delay(1000);
   digitalWrite(ENABLE_F, HIGH); // Active motor
 }
+void FILL_WATER(int state){
+  digitalWrite(PUMP_WATER,state);
+}

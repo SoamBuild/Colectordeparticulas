@@ -53,6 +53,7 @@ void setup()
   pinMode(ENABLE_F, OUTPUT);
 
   pinMode(PUMP_WATER,OUTPUT);
+  digitalWrite(PUMP_WATER,HIGH);
   
   digitalWrite(ENABLE_X, LOW);
   digitalWrite(ENABLE_F, HIGH);
@@ -111,6 +112,9 @@ void SEARCH_BOTTLE(int id_bottle)
   if (detect_iman == true && state_botellas[id_bottle] == 0)
   {
     MOVE_FUNNEL(15, id_bottle);
+    FILL_WATER(0);
+    delay(1000);
+    FILL_WATER(1);
     stage_routine = 2;
     ROUTINE_REGISTRY(stage_routine);
     delay(1000);
