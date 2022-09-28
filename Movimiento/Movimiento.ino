@@ -22,6 +22,7 @@ const int MOTOR_F_DIRECTION_PIN = 14;
 const int LIMIT_FUNNEL_SWITCH_PIN = 15;
 const int ENABLE_F = 26;
 
+const int PUMP_WATER=2;
 ESP_FlexyStepper stepper_X;
 
 ESP_FlexyStepper stepper_FUNNEL;
@@ -51,6 +52,8 @@ void setup()
   pinMode(ENABLE_X, OUTPUT);
   pinMode(ENABLE_F, OUTPUT);
 
+  pinMode(PUMP_WATER,OUTPUT);
+  
   digitalWrite(ENABLE_X, LOW);
   digitalWrite(ENABLE_F, HIGH);
 
