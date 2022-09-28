@@ -56,7 +56,7 @@ void readFile(fs::FS &fs, const char * path) {
 
   id = getValor(myString, ',', 0).toInt();
   timed = getValor(myString, ',', 1);
-  stage = getValor(myString, ',', 2).toInt();
+  stage_routine = getValor(myString, ',', 2).toInt();
   /*
   b1 = getValor(myString, ',', 3).toInt();
   b2 = getValor(myString, ',', 4).toInt();
@@ -66,7 +66,7 @@ void readFile(fs::FS &fs, const char * path) {
 
   Serial.println(id);
   Serial.println(timed);
-  Serial.println(stage);
+  Serial.println(stage_routine);
   /*
   Serial.println(b1);
   Serial.println(b2);
@@ -91,9 +91,9 @@ String getValor(String data, char separator, int index) {
 
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
-void toregistry(int stage) {
-  Serial.println("Guardando etapa: " + String(stage));
-  String tosave = String(id) + ",000000," + String(stage)+","+String(state_botellas[1])+","+String(state_botellas[2])+","+String(state_botellas[3])+","+String(state_botellas[4])+"\n";
+void ROUTINE_REGISTRY(int stage_routine) {
+  Serial.println("Guardando etapa: " + String(stage_routine));
+  String tosave = String(id) + ",000000," + String(stage_routine)+","+String(state_botellas[1])+","+String(state_botellas[2])+","+String(state_botellas[3])+","+String(state_botellas[4])+"\n";
   appendFile(SD, "/Data.txt", tosave.c_str());
   writeFile(SD, "/dataTemp.txt", tosave.c_str());
 }
