@@ -11,9 +11,10 @@ const int ENABLE_MOTORS = 26;
 ESP_FlexyStepper stepper_DISK;
 ESP_FlexyStepper stepper_FUNNEL;
 int counthomeerror = 0;
-
+//Sensors and actuator pins 
 int pumpwater =2;
-
+//Control global variables
+boolean statesbotellas[]={0,0,0,0};
 void setup() {
   Serial.begin(115200);
   pinMode(pumpwater,OUTPUT);
