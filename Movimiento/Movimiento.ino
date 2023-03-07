@@ -14,7 +14,7 @@ int counthomeerror = 0;
 //Sensors and actuator pins 
 int pumpwater =2;
 //Control global variables
-boolean statesbotellas[]={0,0,0,0};
+boolean statesbotellas[]={1,0,1,0};
 void setup() {
   Serial.begin(115200);
   pinMode(pumpwater,OUTPUT);
@@ -32,7 +32,7 @@ void setup() {
 
 }
 void loop() {
-  homex;
+
   searchbottle(0);
   delay(2000);
   searchbottle(1);
@@ -43,6 +43,10 @@ void loop() {
 
 }
 void searchbottle(int idbotella) {
+  
+  Serial.println("Botella: "+String(idbotella)+" Estado: "+String(statesbotellas[idbotella]));
+
+  if (statesbotellas[idbotella] == true){
   int localdistance = 2750;
   digitalWrite(ENABLE_MOTORS, LOW);
   for (int i = 0; i < idbotella; i++) {
@@ -58,9 +62,11 @@ void searchbottle(int idbotella) {
   digitalWrite(pumpwater,HIGH);
   delay(2000);
   movefunnel(-600);
-  //homex();
   digitalWrite(ENABLE_MOTORS, HIGH);
-
+  statesbotellas[idbotella] = 0;
+  }else{
+    Serial.println("Botella "+String(idbotella)+" Completa");
+  }
 }
 void movefunnel(int distance) {
   stepper_FUNNEL.setSpeedInStepsPerSecond(300);
