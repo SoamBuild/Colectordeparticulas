@@ -1,5 +1,6 @@
 #include <ESP_FlexyStepper.h>
 
+//setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;
 const int LIMIT_X_SWITCH_PIN = 15;
@@ -7,24 +8,25 @@ const int MOTOR_F_STEP_PIN = 33;//33
 const int MOTOR_F_DIRECTION_PIN = 32;//32
 const int LIMIT_FUNNEL_SWITCH_PIN = 13;
 const int ENABLE_MOTORS = 26;
-
 ESP_FlexyStepper stepper_DISK;
 ESP_FlexyStepper stepper_FUNNEL;
-
 int counthomeerror = 0;
+
+int pumpwater =2;
 
 void setup() {
   Serial.begin(115200);
+  pinMode(pumpwater,OUTPUT);
   pinMode(ENABLE_MOTORS, OUTPUT);
   digitalWrite(ENABLE_MOTORS, LOW);
   pinMode(LIMIT_X_SWITCH_PIN, INPUT_PULLUP);
   pinMode(LIMIT_FUNNEL_SWITCH_PIN, INPUT_PULLUP);
-  movefunnel(300);
   stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
   stepper_DISK.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
   homex();
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
+  
 
 
 }
@@ -50,6 +52,10 @@ void searchbottle(int idbotella) {
   delay(1000);
   movefunnel(20);
   delay(1000);
+  digitalWrite(pumpwater,LOW);
+  delay(2000);
+  digitalWrite(pumpwater,HIGH);
+  delay(2000);
   movefunnel(-600);
   //homex();
   digitalWrite(ENABLE_MOTORS, HIGH);
