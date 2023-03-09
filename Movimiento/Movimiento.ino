@@ -13,10 +13,12 @@ ESP_FlexyStepper stepper_FUNNEL;
 int counthomeerror = 0;
 //Sensors and actuator pins 
 int pumpwater =2;
+int imanencoder =0;
 //Control global variables
-boolean statesbotellas[]={1,0,1,0};
+boolean statesbotellas[]={1,0,0,0};
 void setup() {
   Serial.begin(115200);
+  pinMode(imanencoder,INPUT_PULLUP);
   pinMode(pumpwater,OUTPUT);
   pinMode(ENABLE_MOTORS, OUTPUT);
   digitalWrite(ENABLE_MOTORS, LOW);
@@ -57,10 +59,12 @@ void searchbottle(int idbotella) {
   delay(1000);
   movefunnel(20);
   delay(1000);
+  digitalWrite(ENABLE_MOTORS, HIGH);
   digitalWrite(pumpwater,LOW);
   delay(2000);
   digitalWrite(pumpwater,HIGH);
-  delay(2000);
+  delay(5000);
+  digitalWrite(ENABLE_MOTORS, LOW);
   movefunnel(-600);
   digitalWrite(ENABLE_MOTORS, HIGH);
   statesbotellas[idbotella] = 0;
