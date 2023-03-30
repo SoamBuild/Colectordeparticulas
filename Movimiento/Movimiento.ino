@@ -51,7 +51,7 @@ void loop()
   }
   if (tiempo_transcurrido2 >= 345600000)
   { // Cambiamos el tiempo 4
-    searchbottle(2);
+    searchbottle(0);
     tarea_inicio2 = millis();
   }
   if (tiempo_transcurrido3 >= 518400000)
