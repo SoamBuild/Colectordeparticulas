@@ -3,6 +3,16 @@
 #include "time.h"
 #include <ESP_FlexyStepper.h>
 #include "config.h"
+#include <Firebase_ESP_Client.h>
+#include "addons/TokenHelper.h"
+#include "addons/RTDBHelper.h"
+
+// Firebase object
+FirebaseData fbdo;
+FirebaseAuth auth;
+FirebaseConfig config;
+String uid;
+String databasePath;
 
 // setup NTP SERVER
 const char *ntpServer = "pool.ntp.org";
@@ -30,6 +40,16 @@ void setup()
   try_Connected();
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   getTime();
+  config.api_key = API_KEY;
+  auth.user.email = USER_EMAIL;
+  auth.user.password = USER_PASSWORD;
+  config.database_url = DATABASE_URL;
+
+  fbdo.setResponseSize(4096);
+  config.token_status_callback = tokenStatusCallback;
+  config.max_token_generation_retry = 5;
+  tryOn_database();
+  delay(5000);
   try_Disconnected();
   /*
   pinMode(imanencoder, INPUT_PULLUP);
