@@ -1,3 +1,5 @@
+// Test wifi para probar rutinas basadas en eventos controlados por un servidor ntp
+
 #include <ESP_FlexyStepper.h>
 unsigned long tarea_inicio1;
 unsigned long tarea_inicio2;
