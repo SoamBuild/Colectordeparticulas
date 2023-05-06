@@ -1,10 +1,11 @@
 // Test wifi para probar rutinas basadas en eventos controlados por un servidor ntp
-
+#include <WiFi.h>
+#include "time.h"
 #include <ESP_FlexyStepper.h>
-unsigned long tarea_inicio1;
-unsigned long tarea_inicio2;
-unsigned long tarea_inicio3;
-unsigned long tarea_inicio4;
+
+// Setup local network
+const char *ssid = "REPLACE_WITH_YOUR_SSID";
+const char *password = "REPLACE_WITH_YOUR_PASSWORD";
 // setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;

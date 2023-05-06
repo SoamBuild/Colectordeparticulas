@@ -218,6 +218,7 @@
                 "/home/fastmarcus/.arduino15/packages/esp32/hardware/esp32/2.0.6/tools/sdk/esp32/dio_qspi/include",
                 "/home/fastmarcus/.arduino15/packages/esp32/hardware/esp32/2.0.6/cores/esp32",
                 "/home/fastmarcus/.arduino15/packages/esp32/hardware/esp32/2.0.6/variants/lolin32-lite",
+                "/home/fastmarcus/.arduino15/packages/esp32/hardware/esp32/2.0.6/libraries/WiFi/src",
                 "/home/fastmarcus/Arduino/libraries/ESP-FlexyStepper-master/src",
                 "/home/fastmarcus/.arduino15/packages/esp32/tools/xtensa-esp32-elf-gcc/gcc8_4_0-esp-2021r2-patch5/xtensa-esp32-elf/include/c++/8.4.0",
                 "/home/fastmarcus/.arduino15/packages/esp32/tools/xtensa-esp32-elf-gcc/gcc8_4_0-esp-2021r2-patch5/xtensa-esp32-elf/include/c++/8.4.0/xtensa-esp32-elf",
