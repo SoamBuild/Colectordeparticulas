@@ -11,3 +11,8 @@ void try_Connected()
     Serial.println("");
     Serial.println("WiFi connected.");
 }
+void try_Disconnected()
+{
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+}

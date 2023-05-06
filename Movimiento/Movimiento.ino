@@ -2,13 +2,11 @@
 #include <WiFi.h>
 #include "time.h"
 #include <ESP_FlexyStepper.h>
+#include "config.h"
 
-// Setup local network
-const char *ssid = "REPLACE_WITH_YOUR_SSID";
-const char *password = "REPLACE_WITH_YOUR_PASSWORD";
 // setup NTP SERVER
 const char *ntpServer = "pool.ntp.org";
-const long gmtOffset_sec = 0;
+const long gmtOffset_sec = -14400;
 const int daylightOffset_sec = 0;
 // setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
@@ -32,7 +30,8 @@ void setup()
   try_Connected();
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   getTime();
-
+  try_Disconnected();
+  /*
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
   pinMode(ENABLE_MOTORS, OUTPUT);
@@ -44,6 +43,7 @@ void setup()
   homex();
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
+  */
 }
 void loop()
 {
