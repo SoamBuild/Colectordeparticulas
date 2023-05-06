@@ -6,6 +6,10 @@
 // Setup local network
 const char *ssid = "REPLACE_WITH_YOUR_SSID";
 const char *password = "REPLACE_WITH_YOUR_PASSWORD";
+// setup NTP SERVER
+const char *ntpServer = "pool.ntp.org";
+const long gmtOffset_sec = 0;
+const int daylightOffset_sec = 0;
 // setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;
@@ -26,6 +30,8 @@ void setup()
 {
   Serial.begin(115200);
   try_Connected();
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  getTime();
 
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
@@ -41,14 +47,16 @@ void setup()
 }
 void loop()
 {
+  getTime();
+  delay(1000);
 
   // Cambiamos el tiempo a 2
 
-  searchbottle(0);
+  // searchbottle(0);
 
-  searchbottle(1);
+  // searchbottle(1);
 
-  searchbottle(3);
+  // searchbottle(3);
 
   /*
     searchbottle(0);
