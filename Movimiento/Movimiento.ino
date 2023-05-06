@@ -24,11 +24,9 @@ int imanencoder = 0;
 boolean statesbotellas[] = {1, 1, 1, 1};
 void setup()
 {
-  tarea_inicio1 = millis();
-  tarea_inicio2 = millis();
-  tarea_inicio3 = millis();
-  tarea_inicio4 = millis();
   Serial.begin(115200);
+  try_Connected();
+
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
   pinMode(ENABLE_MOTORS, OUTPUT);
@@ -43,30 +41,15 @@ void setup()
 }
 void loop()
 {
-  unsigned long tiempo_transcurrido1 = millis() - tarea_inicio1;
-  unsigned long tiempo_transcurrido2 = millis() - tarea_inicio2;
-  unsigned long tiempo_transcurrido3 = millis() - tarea_inicio3;
-  unsigned long tiempo_transcurrido4 = millis() - tarea_inicio4;
 
-  if (tiempo_transcurrido1 >= 172800000)
-  { // Cambiamos el tiempo a 2
-    tarea_inicio1 = millis();
-  }
-  if (tiempo_transcurrido2 >= 345600000)
-  { // Cambiamos el tiempo 4
-    searchbottle(0);
-    tarea_inicio2 = millis();
-  }
-  if (tiempo_transcurrido3 >= 518400000)
-  { // Cambiamos el tiempo a 6
-    searchbottle(1);
-    tarea_inicio3 = millis();
-  }
-  if (tiempo_transcurrido4 >= 691200000)
-  { // Cambiamos el tiempo a 8
-    searchbottle(3);
-    tarea_inicio4 = millis();
-  }
+  // Cambiamos el tiempo a 2
+
+  searchbottle(0);
+
+  searchbottle(1);
+
+  searchbottle(3);
+
   /*
     searchbottle(0);
     delay(2000);
