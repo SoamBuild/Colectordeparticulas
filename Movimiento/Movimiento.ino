@@ -56,8 +56,9 @@ boolean statesbotellas[] = {1, 1, 1, 1};
 // Alarmas segun hora
 boolean task1[] = {9, 10, 0};
 boolean task2[] = {2, 0, 0};
-boolean task3[] = {4, 0, 1};
-boolean task4[] = {6, 0, 1};
+boolean task3[] = {4, 0, 0};
+boolean task4[] = {6, 0, 0};
+int day, hour, minute;
 void setup()
 {
   Serial.begin(115200);
