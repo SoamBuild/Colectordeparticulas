@@ -32,7 +32,7 @@ unsigned long epochTime;
 
 // Millis para enviar los datos cada xtiempo
 unsigned long previousMillis = 0;
-const long interval = 60000; // Intervalo de 5 minutos en milisegundos
+const long interval = 3600000; // Intervalo de 5 minutos en milisegundos
 
 // Voltaje Colector Data
 float voltaje = 12.2; // static x now
@@ -51,14 +51,15 @@ int counthomeerror = 0;
 int pumpwater = 2;
 int imanencoder = 0;
 // Control global variables
-boolean statesbotellas[] = {1, 1, 1, 1};
+boolean statesbotellas[] = {0, 0, 0, 0};
 
 // Alarmas segun hora
-boolean task1[] = {9, 10, 0};
-boolean task2[] = {2, 0, 0};
-boolean task3[] = {4, 0, 0};
-boolean task4[] = {6, 0, 0};
-int day, hour, minute;
+int task1[] = {6, 23, 10, 0};
+int task2[] = {7, 2, 10, 0};
+int task3[] = {7, 4, 10, 0};
+int task4[] = {7, 6, 10, 0};
+int day, hour, minute, second;
+
 void setup()
 {
   Serial.begin(115200);
@@ -76,6 +77,12 @@ void setup()
   tryOn_database();
   delay(5000);
   try_Disconnected();
+
+  // Setup OUTPUTS solo para prueba de alarmas
+  pinMode(4, OUTPUT);
+  pinMode(16, OUTPUT);
+  pinMode(17, OUTPUT);
+  pinMode(18, OUTPUT);
   /*
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
@@ -103,6 +110,30 @@ void loop()
     postData();
   }
 
+  if (day == task1[0] && hour == task1[1] && minute == task1[2] && second == task1[3])
+  {
+    Serial.println("Ejecutando tarea 1");
+    statesbotellas[0] = 1;
+    digitalWrite(4, HIGH);
+  }
+  if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
+  {
+    Serial.println("Ejecutando tarea 2");
+    statesbotellas[1] = 1;
+    digitalWrite(16, HIGH);
+  }
+  if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
+  {
+    Serial.println("Ejecutando tarea 3");
+    statesbotellas[2] = 1;
+    digitalWrite(17, HIGH);
+  }
+  if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
+  {
+    Serial.println("Ejecutando tarea 4");
+    statesbotellas[3] = 1;
+    digitalWrite(18, HIGH);
+  }
   // Cambiamos el tiempo a 2
 
   // searchbottle(0);

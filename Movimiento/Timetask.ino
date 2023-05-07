@@ -8,10 +8,12 @@ void getTime()
         return;
     }
     // time = timeinfo, "%A, %B %d %Y %H:%M:%S";
-    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+
     day = timeinfo.tm_mday;
     hour = timeinfo.tm_hour;
     minute = timeinfo.tm_min;
+    second = timeinfo.tm_sec;
+    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
 }
 unsigned long gettimeUnix()
 {
