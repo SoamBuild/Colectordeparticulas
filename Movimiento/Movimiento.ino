@@ -14,10 +14,28 @@ FirebaseConfig config;
 String uid;
 String databasePath;
 
+// Setup data x json
+String botella1 = "/B1";
+String botella2 = "/B2";
+String botella3 = "/B3";
+String botella4 = "/B4";
+String Bat = "/Batlevel";
+String timePath = "/Timestamp";
+String parentPath;
+FirebaseJson json;
+
 // setup NTP SERVER
 const char *ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = -14400;
 const int daylightOffset_sec = 0;
+unsigned long epochTime;
+
+// Millis para enviar los datos cada xtiempo
+unsigned long previousMillis = 0;
+const long interval = 60000; // Intervalo de 5 minutos en milisegundos
+
+// Voltaje Colector Data
+float voltaje = 12.2; // static x now
 // setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;
@@ -67,8 +85,16 @@ void setup()
 }
 void loop()
 {
+
   getTime();
-  delay(1000);
+
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= interval)
+  {
+    previousMillis = currentMillis;
+    postData();
+  }
 
   // Cambiamos el tiempo a 2
 

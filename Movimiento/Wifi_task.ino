@@ -15,23 +15,37 @@ void try_Disconnected()
 {
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
+    Serial.println("WiFi OFF");
 }
 void tryOn_database()
 {
     Firebase.begin(&config, &auth);
-
-    // Getting the user UID might take a few seconds
     Serial.println("Getting User UID");
     while ((auth.token.uid) == "")
     {
         Serial.print('.');
         delay(1000);
     }
-    // Print user UID
     uid = auth.token.uid.c_str();
     Serial.print("User UID: ");
     Serial.println(uid);
-    databasePath = "/UsersData/" + uid;
-
-    // Update database path
+    databasePath = "/ColectorData/" + uid + "/Colector1";
+}
+void publish()
+{
+    parentPath = databasePath + "/" + String(epochTime);
+    json.set(botella1.c_str(), String(statesbotellas[0]));
+    json.set(botella2.c_str(), String(statesbotellas[1]));
+    json.set(botella3.c_str(), String(statesbotellas[2]));
+    json.set(botella4.c_str(), String(statesbotellas[3]));
+    json.set(Bat.c_str(), String(voltaje));
+    json.set(timePath, String(epochTime));
+    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+}
+void postData()
+{
+    try_Connected();
+    tryOn_database();
+    publish();
+    try_Disconnected();
 }
