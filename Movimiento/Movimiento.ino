@@ -32,7 +32,7 @@ unsigned long epochTime;
 
 // Millis para enviar los datos cada xtiempo
 unsigned long previousMillis = 0;
-const long interval = 3600000; // Intervalo de 5 minutos en milisegundos
+const long interval = 120000; // 3600000; // Intervalo de 5 minutos en milisegundos
 
 // Voltaje Colector Data
 float voltaje = 12.2; // static x now
@@ -71,9 +71,6 @@ void setup()
   auth.user.password = USER_PASSWORD;
   config.database_url = DATABASE_URL;
 
-  fbdo.setResponseSize(4096);
-  config.token_status_callback = tokenStatusCallback;
-  config.max_token_generation_retry = 5;
   tryOn_database();
   delay(5000);
   try_Disconnected();

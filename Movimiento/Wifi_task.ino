@@ -19,6 +19,9 @@ void try_Disconnected()
 }
 void tryOn_database()
 {
+    fbdo.setResponseSize(4096);
+    config.token_status_callback = tokenStatusCallback;
+    config.max_token_generation_retry = 5;
     Firebase.begin(&config, &auth);
     Serial.println("Getting User UID");
     while ((auth.token.uid) == "")
