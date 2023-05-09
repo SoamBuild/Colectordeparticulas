@@ -1,4 +1,4 @@
-void readFile(fs::FS &fs, const char *path)
+void readFile(fs::FS &fs, const char *path, int id)
 {
     Serial.printf("Reading file: %s\n", path);
 
@@ -6,18 +6,21 @@ void readFile(fs::FS &fs, const char *path)
     if (!file)
     {
         Serial.println("Failed to open file for reading");
+        statesbotellas[id] = 0;
         return;
     }
 
-    Serial.print("Read from file: ");
+    // Serial.print("Read from file: ");
     while (file.available())
     {
         myString = file.readStringUntil('\n');
+        statesbotellas[id] = getValor(myString, ',', 0).toInt();
     }
 
-    id = getValor(myString, ',', 0).toInt();
-    Serial.println(id);
-    file.close();
+    // id = getValor(myString, ',', 0).toInt();
+
+    // Serial.println(id);
+    // file.close();
 }
 String getValor(String data, char separator, int index)
 {
