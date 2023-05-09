@@ -6,6 +6,7 @@
 #include <Firebase_ESP_Client.h>
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
+#include <SPIFFS.h>
 
 // Firebase object
 FirebaseData fbdo;
@@ -34,6 +35,9 @@ unsigned long epochTime;
 unsigned long previousMillis = 0;
 const long interval = 120000; // 3600000; // Intervalo de 5 minutos en milisegundos
 
+// Variables para leer datos desde la memoria interna
+String myString;
+int id;
 // Voltaje Colector Data
 float voltaje = 12.2; // static x now
 // setup and objects stepper motors
@@ -63,6 +67,11 @@ int day, hour, minute, second;
 void setup()
 {
   Serial.begin(115200);
+  if (!SPIFFS.begin(true))
+  {
+    // Serial.println(“An Error has occurred while mounting SPIFFS”);
+    return;
+  }
   try_Connected();
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   getTime();
