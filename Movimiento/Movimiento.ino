@@ -29,7 +29,7 @@ const int daylightOffset_sec = 0;
 unsigned long epochTime;
 // Millis para enviar los datos cada xtiempo
 unsigned long previousMillis = 0;
-const long interval = 120000; // 3600000; // Intervalo de 5 minutos en milisegundos
+const long interval = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
 // Variables para leer datos desde la memoria interna
 String myString;
 // setup and objects stepper motors
@@ -51,23 +51,19 @@ boolean statesbotellas[] = {0, 0, 0, 0};
 // Voltaje Colector Data
 float voltaje = 12.2; // static x now
 // Alarmas segun hora
-int task1[] = {9, 18, 48, 0};
-int task2[] = {7, 2, 10, 0};
-int task3[] = {7, 4, 10, 0};
-int task4[] = {7, 6, 10, 0};
+int task1[] = {10, 17, 13, 0};
+int task2[] = {11, 2, 10, 0};
+int task3[] = {11, 4, 10, 0};
+int task4[] = {11, 6, 10, 0};
 int day, hour, minute, second;
 
 void setup()
 {
   Serial.begin(115200);
-  if (!SPIFFS.begin(true))
-  {
-    Serial.println("An Error has occurred while mounting SPIFFS");
-    return;
-  }
-  readFile(SPIFFS, "/b2.txt", 1); // leer el archivo de spiff de las botellas
+
+  //  readFile(SPIFFS, "/b2.txt", 1); // leer el archivo de spiff de las botellas
   Serial.println(statesbotellas[0]);
-  delay(5000);
+  // delay(5000);
 
   try_Connected();
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
@@ -80,13 +76,7 @@ void setup()
   tryOn_database();
   delay(5000);
   try_Disconnected();
-
   // Setup OUTPUTS solo para prueba de alarmas
-  pinMode(4, OUTPUT);
-  pinMode(16, OUTPUT);
-  pinMode(17, OUTPUT);
-  pinMode(18, OUTPUT);
-  /*
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
   pinMode(ENABLE_MOTORS, OUTPUT);
@@ -98,7 +88,6 @@ void setup()
   homex();
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
-  */
 }
 void loop()
 {
@@ -116,53 +105,24 @@ void loop()
   if (day == task1[0] && hour == task1[1] && minute == task1[2] && second == task1[3])
   {
     Serial.println("Ejecutando tarea 1");
-    statesbotellas[0] = 1;
-
-    String valor = String(statesbotellas[0]);
-    writeFile(SPIFFS, "/b1.txt", valor.c_str());
+    searchbottle(0);
     digitalWrite(4, HIGH);
   }
   if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
   {
     Serial.println("Ejecutando tarea 2");
-    statesbotellas[1] = 1;
-    String valor = String(statesbotellas[1]);
-    writeFile(SPIFFS, "/b2.txt", valor.c_str());
-    digitalWrite(16, HIGH);
+    searchbottle(1);
   }
   if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
   {
     Serial.println("Ejecutando tarea 3");
-    statesbotellas[2] = 1;
-    String valor = String(statesbotellas[2]);
-    writeFile(SPIFFS, "/b3.txt", valor.c_str());
-    digitalWrite(17, HIGH);
+    searchbottle(2);
   }
   if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
   {
     Serial.println("Ejecutando tarea 4");
-    statesbotellas[3] = 1;
-    String valor = String(statesbotellas[3]);
-    writeFile(SPIFFS, "/b4.txt", valor.c_str());
-    digitalWrite(18, HIGH);
-  }
-  // Cambiamos el tiempo a 2
-
-  // searchbottle(0);
-
-  // searchbottle(1);
-
-  // searchbottle(3);
-
-  /*
-    searchbottle(0);
-    delay(2000);
-    searchbottle(1);
-    delay(2000);
-    searchbottle(2);
-    delay(2000);
     searchbottle(3);
-  */
+  }
 }
 void searchbottle(int idbotella)
 {
