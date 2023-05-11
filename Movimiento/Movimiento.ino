@@ -106,7 +106,6 @@ void loop()
   {
     Serial.println("Ejecutando tarea 1");
     searchbottle(0);
-    digitalWrite(4, HIGH);
   }
   if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
   {
