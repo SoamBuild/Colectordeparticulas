@@ -29,7 +29,7 @@ const int daylightOffset_sec = 0;
 unsigned long epochTime;
 // Millis para enviar los datos cada xtiempo
 unsigned long previousMillis = 0;
-const long interval = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
+const long interval = 120000; // 3600000; // Intervalo de 5 minutos en milisegundos
 // Variables para leer datos desde la memoria interna
 String myString;
 // setup and objects stepper motors
@@ -47,14 +47,15 @@ int counthomeerror = 0;
 int pumpwater = 2;
 int imanencoder = 0;
 // Control global variables
-boolean statesbotellas[] = {0, 0, 0, 0};
+boolean statesbotellas[] = {1, 1, 1, 1};
 // Voltaje Colector Data
-float voltaje = 12.2; // static x now
+int batin = 12;
+float voltaje = 0; // static x now
 // Alarmas segun hora
-int task1[] = {10, 17, 13, 0};
-int task2[] = {11, 2, 10, 0};
-int task3[] = {11, 4, 10, 0};
-int task4[] = {11, 6, 10, 0};
+int task1[] = {11, 13, 39, 0};
+int task2[] = {11, 13, 42, 0};
+int task3[] = {11, 13, 44, 0};
+int task4[] = {11, 13, 46, 0};
 int day, hour, minute, second;
 
 void setup()
@@ -99,6 +100,8 @@ void loop()
   if (currentMillis - previousMillis >= interval)
   {
     previousMillis = currentMillis;
+    int readbat_A = analogRead(batin);
+    voltaje = ((readbat_A / 4095.0) * 3.3) * 4.92;
     postData();
   }
 
