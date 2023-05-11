@@ -29,7 +29,7 @@ const int daylightOffset_sec = 0;
 unsigned long epochTime;
 // Millis para enviar los datos cada xtiempo
 unsigned long previousMillis = 0;
-const long interval = 120000; // 3600000; // Intervalo de 5 minutos en milisegundos
+const long interval = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
 // Variables para leer datos desde la memoria interna
 String myString;
 // setup and objects stepper motors
@@ -52,10 +52,10 @@ boolean statesbotellas[] = {1, 1, 1, 1};
 int batin = 12;
 float voltaje = 0; // static x now
 // Alarmas segun hora
-int task1[] = {11, 13, 39, 0};
-int task2[] = {11, 13, 42, 0};
-int task3[] = {11, 13, 44, 0};
-int task4[] = {11, 13, 46, 0};
+int task1[] = {12, 2, 0, 0};
+int task2[] = {12, 12, 0, 0};
+int task3[] = {12, 16, 0, 0};
+int task4[] = {12, 17, 30, 0};
 int day, hour, minute, second;
 
 void setup()
