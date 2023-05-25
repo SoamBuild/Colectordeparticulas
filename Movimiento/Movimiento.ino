@@ -27,9 +27,12 @@ const char *ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = -14400;
 const int daylightOffset_sec = 0;
 unsigned long epochTime;
-// Millis para enviar los datos cada xtiempo
-unsigned long previousMillis = 0;
-const long interval = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
+// Millis para enviar los datos a la nube cada xtiempo
+unsigned long previousmillis_CLOUD = 0;
+const long interval_CLOUD = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
+// millis para guardar los datos en la sd
+unsigned long previousmillis_SD = 0; // Variable para almacenar el tiempo anterior
+unsigned long interval_SD = 300000;  // Intervalo de tiempo deseado en milisegundos (5 minutos)
 // SD SETUP
 String myString;
 // SD PINS
@@ -108,7 +111,7 @@ void setup()
     Serial.println("Archivo base no existe...");
     delay(500);
     Serial.println("Archivo creado");
-    writeFile(SD, "/ActivePuma_DB.txt", "sessionID,time,pirID,batteryValue \n");
+    writeFile(SD, "/ActivePuma_DB.txt", "sessionID,time,batteryValue \n");
     if (SD.exists("/ActivePuma") == false)
     {
       Serial.println("ID no encontrado");
@@ -124,37 +127,43 @@ void loop()
 {
 
   getTime();
-
   unsigned long currentMillis = millis();
-
-  if (currentMillis - previousMillis >= interval)
+  if (currentMillis - previousmillis_CLOUD >= interval_CLOUD)
   {
-    previousMillis = currentMillis;
+    previousmillis_CLOUD = currentMillis;
     int readbat_A = analogRead(batin);
     voltaje = ((readbat_A / 4095.0) * 3.3) * 4.92;
     postData();
   }
+  if (tiempoActual - tiempoAnterior5min >= intervalo5min)
+  {
+    ejecutarFuncion5min();             // Llamar a la función que se ejecutará cada 5 minutos
+    tiempoAnterior5min = tiempoActual; // Actualizar el tiempo anterior de la función cada 5 minutos
+  }
 
-  if (day == task1[0] && hour == task1[1] && minute == task1[2] && second == task1[3])
-  {
-    Serial.println("Ejecutando tarea 1");
-    searchbottle(0);
-  }
-  if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
-  {
-    Serial.println("Ejecutando tarea 2");
-    searchbottle(1);
-  }
-  if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
-  {
-    Serial.println("Ejecutando tarea 3");
-    searchbottle(2);
-  }
-  if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
-  {
-    Serial.println("Ejecutando tarea 4");
-    searchbottle(3);
-  }
+  // Resto del código del programa
+}
+
+if (day == task1[0] && hour == task1[1] && minute == task1[2] && second == task1[3])
+{
+  Serial.println("Ejecutando tarea 1");
+  searchbottle(0);
+}
+if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
+{
+  Serial.println("Ejecutando tarea 2");
+  searchbottle(1);
+}
+if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
+{
+  Serial.println("Ejecutando tarea 3");
+  searchbottle(2);
+}
+if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
+{
+  Serial.println("Ejecutando tarea 4");
+  searchbottle(3);
+}
 }
 void searchbottle(int idbotella)
 {
