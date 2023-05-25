@@ -30,8 +30,14 @@ unsigned long epochTime;
 // Millis para enviar los datos cada xtiempo
 unsigned long previousMillis = 0;
 const long interval = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
-// Variables para leer datos desde la memoria interna
+// SD SETUP
 String myString;
+// SD PINS
+#define SCK 14
+#define MISO 21
+#define MOSI 19
+#define CS 5
+SPIClass spi = SPIClass(VSPI);
 // setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;
@@ -87,8 +93,36 @@ void setup()
   stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
   stepper_DISK.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
   homex();
+  movex(500);
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
+  spi.begin(SCK, MISO, MOSI, CS);
+  if (!SD.begin(CS, spi, 80000000))
+  {
+    Serial.println("Card Mount Failed");
+    return;
+  }
+  else
+  {
+    Serial.println("SD Mount OK");
+  }
+
+  if (SD.exists("/ActivePuma_DB.txt") == false)
+  {
+    Serial.println("Archivo base no existe...");
+    delay(500);
+    Serial.println("Archivo creado");
+    writeFile(SD, "/ActivePuma_DB.txt", "sessionID,time,pirID,batteryValue \n");
+    if (SD.exists("/ActivePuma") == false)
+    {
+      Serial.println("ID no encontrado");
+      writeFile(SD, "/ActivePuma.txt", "1,0:0:0,0,0.0 \n");
+    }
+  }
+  else
+  {
+    Serial.println("Archivo base encontrado... abriendo");
+  }
 }
 void loop()
 {
