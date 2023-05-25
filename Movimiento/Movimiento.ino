@@ -61,10 +61,10 @@ boolean statesbotellas[] = {1, 1, 1, 1};
 int batin = 12;
 float voltaje = 0; // static x now
 // Alarmas segun hora
-int task1[] = {25, 15, 20, 0};
-int task2[] = {25, 16, 0, 0};
-int task3[] = {25, 17, 30, 0};
-int task4[] = {25, 18, 0, 0};
+int task1[] = {25, 17, 30, 0};
+int task2[] = {25, 22, 30, 0};
+int task3[] = {26, 5, 0, 0};
+int task4[] = {26, 8, 0, 0};
 int day, hour, minute, second;
 
 void setup()
@@ -153,12 +153,12 @@ void loop()
   if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
   {
     Serial.println("Ejecutando tarea 2");
-    searchbottle(1);
+    searchbottle(2);
   }
   if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
   {
     Serial.println("Ejecutando tarea 3");
-    searchbottle(2);
+    searchbottle(1);
   }
   if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
   {
