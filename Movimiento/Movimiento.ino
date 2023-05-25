@@ -33,9 +33,9 @@ const long interval = 3600000; // 3600000; // Intervalo de 5 minutos en milisegu
 // SD SETUP
 String myString;
 // SD PINS
-#define SCK 14
-#define MISO 21
-#define MOSI 19
+#define SCK 18
+#define MISO 4
+#define MOSI 23
 #define CS 5
 SPIClass spi = SPIClass(VSPI);
 // setup and objects stepper motors
@@ -67,11 +67,7 @@ int day, hour, minute, second;
 void setup()
 {
   Serial.begin(115200);
-
-  //  readFile(SPIFFS, "/b2.txt", 1); // leer el archivo de spiff de las botellas
   Serial.println(statesbotellas[0]);
-  // delay(5000);
-
   try_Connected();
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   getTime();
@@ -79,7 +75,6 @@ void setup()
   auth.user.email = USER_EMAIL;
   auth.user.password = USER_PASSWORD;
   config.database_url = DATABASE_URL;
-
   tryOn_database();
   delay(5000);
   try_Disconnected();
@@ -100,6 +95,7 @@ void setup()
   if (!SD.begin(CS, spi, 80000000))
   {
     Serial.println("Card Mount Failed");
+    ESP.restart();
     return;
   }
   else
