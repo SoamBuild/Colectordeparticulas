@@ -91,7 +91,7 @@ void setup()
   stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
   stepper_DISK.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
   homex();
-  movex(500);
+  movex(600);
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
   spi.begin(SCK, MISO, MOSI, CS);
@@ -106,16 +106,16 @@ void setup()
     Serial.println("SD Mount OK");
   }
 
-  if (SD.exists("/ActivePuma_DB.txt") == false)
+  if (SD.exists("/Colector_DB.txt") == false)
   {
     Serial.println("Archivo base no existe...");
     delay(500);
     Serial.println("Archivo creado");
-    writeFile(SD, "/ActivePuma_DB.txt", "sessionID,time,batteryValue \n");
-    if (SD.exists("/ActivePuma") == false)
+    writeFile(SD, "/Colector_DB.txt", "time,batteryValue \n");
+    if (SD.exists("/ActiveColector.txt") == false)
     {
       Serial.println("ID no encontrado");
-      writeFile(SD, "/ActivePuma.txt", "1,0:0:0,0,0.0 \n");
+      writeFile(SD, "/ActiveColector.txt", "0:0:0,0.0 \n");
     }
   }
   else
@@ -135,35 +135,36 @@ void loop()
     voltaje = ((readbat_A / 4095.0) * 3.3) * 4.92;
     postData();
   }
-  if (tiempoActual - tiempoAnterior5min >= intervalo5min)
+  if (currentMillis - previousmillis_SD >= interval_SD)
   {
-    ejecutarFuncion5min();             // Llamar a la función que se ejecutará cada 5 minutos
-    tiempoAnterior5min = tiempoActual; // Actualizar el tiempo anterior de la función cada 5 minutos
+    previousmillis_SD = currentMillis; // Actualizar el tiempo anterior de la función cada 5 minutos
+    int readbat_A = analogRead(batin);
+    voltaje = ((readbat_A / 4095.0) * 3.3) * 4.92;
+    ROUTINE_REGISTRY(voltaje);
   }
 
   // Resto del código del programa
-}
 
-if (day == task1[0] && hour == task1[1] && minute == task1[2] && second == task1[3])
-{
-  Serial.println("Ejecutando tarea 1");
-  searchbottle(0);
-}
-if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
-{
-  Serial.println("Ejecutando tarea 2");
-  searchbottle(1);
-}
-if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
-{
-  Serial.println("Ejecutando tarea 3");
-  searchbottle(2);
-}
-if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
-{
-  Serial.println("Ejecutando tarea 4");
-  searchbottle(3);
-}
+  if (day == task1[0] && hour == task1[1] && minute == task1[2] && second == task1[3])
+  {
+    Serial.println("Ejecutando tarea 1");
+    searchbottle(0);
+  }
+  if (day == task2[0] && hour == task2[1] && minute == task2[2] && second == task2[3])
+  {
+    Serial.println("Ejecutando tarea 2");
+    searchbottle(1);
+  }
+  if (day == task3[0] && hour == task3[1] && minute == task3[2] && second == task3[3])
+  {
+    Serial.println("Ejecutando tarea 3");
+    searchbottle(2);
+  }
+  if (day == task4[0] && hour == task4[1] && minute == task4[2] && second == task4[3])
+  {
+    Serial.println("Ejecutando tarea 4");
+    searchbottle(3);
+  }
 }
 void searchbottle(int idbotella)
 {

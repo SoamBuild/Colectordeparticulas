@@ -83,14 +83,9 @@ void appendFile(fs::FS &fs, const char *path, const char *message)
 }
 
 // sessionID,time,pirID,batteryValue
-void ROUTINE_REGISTRY(int idPir)
+void ROUTINE_REGISTRY(float localBat)
 {
-
-    // Battery_check(0);
-    // now = rtc.now();
-    // Serial.println("Guardando alerta PIR: " + String(idPir));
-    // String tosave = String(id) + "," + String(now.hour(), DEC) + ":" + String(now.minute(), DEC) + ":" + String(now.second(), DEC) + "," + String(idPir) + "," + String(voltage) + "\n";
-    // appendFile(SD, "/ActivePuma_DB.txt", tosave.c_str());
-    // writeFile(SD, "/ActivePuma.txt", tosave.c_str());
-    // sdregistry = true;
+    String tosave = String(hour) + ":" + String(minute) + ":" + String(second) + "," + String(localBat) + "\n";
+    appendFile(SD, "/Colector_DB.txt", tosave.c_str());
+    writeFile(SD, "/ActiveColector.txt", tosave.c_str());
 }
