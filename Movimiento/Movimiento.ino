@@ -29,7 +29,7 @@ const int daylightOffset_sec = 0;
 unsigned long epochTime;
 // Millis para enviar los datos a la nube cada xtiempo
 unsigned long previousmillis_CLOUD = 0;
-const long interval_CLOUD = 3600000; // 3600000; // Intervalo de 5 minutos en milisegundos
+const long interval_CLOUD = 18000000; // 3600000; // Intervalo de 5 minutos en milisegundos
 // millis para guardar los datos en la sd
 unsigned long previousmillis_SD = 0; // Variable para almacenar el tiempo anterior
 unsigned long interval_SD = 300000;  // Intervalo de tiempo deseado en milisegundos (5 minutos)
@@ -61,10 +61,10 @@ boolean statesbotellas[] = {1, 1, 1, 1};
 int batin = 12;
 float voltaje = 0; // static x now
 // Alarmas segun hora
-int task1[] = {25, 17, 30, 0};
-int task2[] = {25, 22, 30, 0};
-int task3[] = {26, 5, 0, 0};
-int task4[] = {26, 8, 0, 0};
+int task1[] = {31, 12, 30, 0};
+int task2[] = {2, 12, 30, 0};
+int task3[] = {4, 12, 30, 0};
+int task4[] = {6, 12, 30, 0};
 int day, hour, minute, second;
 
 void setup()
