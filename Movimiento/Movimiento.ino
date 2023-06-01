@@ -61,7 +61,7 @@ boolean statesbotellas[] = {1, 1, 1, 1};
 int batin = 12;
 float voltaje = 0; // static x now
 // Alarmas segun hora
-int task1[] = {31, 12, 30, 0};
+int task1[] = {31, 13, 30, 0};
 int task2[] = {2, 12, 30, 0};
 int task3[] = {4, 12, 30, 0};
 int task4[] = {6, 12, 30, 0};
