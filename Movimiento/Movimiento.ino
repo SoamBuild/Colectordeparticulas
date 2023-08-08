@@ -3,6 +3,17 @@
 #include "SD.h"
 #include "SPI.h"
 #include <TimeLib.h>
+#include <IridiumSBD.h>
+
+// SAT MODULE SETUP
+#define IridiumSerial Serial2
+#define RXD2 16
+#define TXD2 17
+IridiumSBD modem(IridiumSerial);
+// DATA FOR SAT MODULE
+int signalQuality = -1;
+int err;
+bool messageSent = false;
 // SD ACTION
 unsigned long previousmillis_SD = 0; // Variable para almacenar el tiempo anterior
 unsigned long interval_SD = 300000;  // Intervalo de tiempo desea
@@ -34,7 +45,7 @@ float voltaje = 0; // static x now
 // Control global variables
 boolean statesbotellas[] = {1, 1, 1, 1};
 // ALARM TASK 1
-// DAY,HOUR,MINUTE,SECOND
+// day(),hour(),minute(),second()
 int task1[] = {31, 13, 30, 0};
 int task2[] = {2, 12, 30, 0};
 int task3[] = {4, 12, 30, 0};
@@ -42,8 +53,39 @@ int task4[] = {6, 12, 30, 0};
 
 void setup()
 {
-
   Serial.begin(115200);
+
+  while (!Serial)
+    ;
+  // BEGIN AND CHECK SATMODULE
+  IridiumSerial.begin(19200);
+  Serial.println("Starting modem...");
+  err = modem.begin();
+  if (err != ISBD_SUCCESS)
+  {
+    Serial.print("Begin failed: error ");
+    Serial.println(err);
+    if (err == ISBD_NO_MODEM_DETECTED)
+      Serial.println("No modem detected: check wiring.");
+    return;
+  }
+  // TASKCHECKSIGNAL
+  checkSignal();
+  // TASKGETTIMESAT
+  gettimeSat();
+  // BEGIN AND CHECK SD
+  spi.begin(SCK, MISO, MOSI, CS);
+  if (!SD.begin(CS, spi, 80000000))
+  {
+    Serial.println("Card Mount Failed");
+    ESP.restart();
+    return;
+  }
+  else
+  {
+    Serial.println("SD Mount OK");
+  }
+  // INIT INPUT AND OUTPUT
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
   pinMode(ENABLE_MOTORS, OUTPUT);
@@ -56,21 +98,42 @@ void setup()
   movex(600);
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
-  spi.begin(SCK, MISO, MOSI, CS);
-  if (!SD.begin(CS, spi, 80000000))
-  {
-    Serial.println("Card Mount Failed");
-    ESP.restart();
-    return;
-  }
-  else
-  {
-    Serial.println("SD Mount OK");
-  }
 }
 void loop()
 {
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousmillis_SD >= interval_SD)
+  {
+    previousmillis_SD = currentMillis; // Actualizar el tiempo anterior de la función cada 5 minutos
+    int readbat_A = analogRead(batin);
+    voltaje = ((readbat_A / 4095.0) * 3.3) * 4.92;
+    ROUTINE_REGISTRY(voltaje);
+  }
+
+  // Resto del código del programa
+
+  if (day() == task1[0] && hour() == task1[1] && minute() == task1[2] && second() == task1[3])
+  {
+    Serial.println("Ejecutando tarea 1");
+    searchbottle(0);
+  }
+  if (day() == task2[0] && hour() == task2[1] && minute() == task2[2] && second() == task2[3])
+  {
+    Serial.println("Ejecutando tarea 2");
+    searchbottle(2);
+  }
+  if (day() == task3[0] && hour() == task3[1] && minute() == task3[2] && second() == task3[3])
+  {
+    Serial.println("Ejecutando tarea 3");
+    searchbottle(1);
+  }
+  if (day() == task4[0] && hour() == task4[1] && minute() == task4[2] && second() == task4[3])
+  {
+    Serial.println("Ejecutando tarea 4");
+    searchbottle(3);
+  }
 }
+
 void searchbottle(int idbotella)
 {
 
@@ -103,85 +166,5 @@ void searchbottle(int idbotella)
   else
   {
     Serial.println("Botella " + String(idbotella) + " Completa");
-  }
-}
-void movefunnel(int distance)
-{
-  stepper_FUNNEL.setSpeedInStepsPerSecond(300);
-  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(200);
-  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(700);
-  stepper_FUNNEL.setTargetPositionInSteps(distance);
-  Serial.println("Movimiento embudo en mm: " + String(distance));
-  while (!stepper_FUNNEL.motionComplete())
-  {
-    stepper_FUNNEL.processMovement();
-  }
-}
-void homefunnel()
-{
-  // digitalWrite(ENABLE_MOTORS, LOW);
-  stepper_FUNNEL.setSpeedInStepsPerSecond(100);
-  stepper_FUNNEL.setAccelerationInStepsPerSecondPerSecond(250);
-  stepper_FUNNEL.setDecelerationInStepsPerSecondPerSecond(250);
-  if (stepper_FUNNEL.moveToHomeInSteps(-1, 5, 800, LIMIT_FUNNEL_SWITCH_PIN) == true)
-  {
-    Serial.println("HOME EMBUDO OK");
-    movefunnel(-600);
-    counthomeerror = 0;
-    // digitalWrite(ENABLE_MOTORS, HIGH);
-  }
-  else
-  {
-    Serial.println("HOME ERROR!" + String(counthomeerror));
-    counthomeerror = counthomeerror + 1;
-    if (counthomeerror == 3)
-    {
-      ESP.restart();
-    }
-    else
-    {
-      homefunnel();
-    }
-  }
-}
-void movex(double distance)
-{
-  // digitalWrite(ENABLE_MOTORS, LOW);
-  stepper_DISK.setSpeedInStepsPerSecond(400);
-  stepper_DISK.setAccelerationInStepsPerSecondPerSecond(200);
-  stepper_DISK.setDecelerationInStepsPerSecondPerSecond(3000);
-  stepper_DISK.setTargetPositionInSteps(distance);
-  Serial.println("Movimiento de disco: " + String(distance));
-  while (!stepper_DISK.motionComplete())
-  {
-    stepper_DISK.processMovement();
-  }
-}
-void homex()
-{
-  stepper_DISK.setSpeedInStepsPerSecond(200);
-  stepper_DISK.setAccelerationInStepsPerSecondPerSecond(1200);
-  stepper_DISK.setDecelerationInStepsPerSecondPerSecond(10000);
-
-  if (stepper_DISK.moveToHomeInSteps(-1, 5, -3000, LIMIT_X_SWITCH_PIN) == true)
-  {
-    Serial.println("HOME BOTELLA OK");
-    delay(3000);
-    // movex(400);
-    counthomeerror = 0;
-    // digitalWrite(ENABLE_MOTORS, HIGH);
-  }
-  else
-  {
-    Serial.println("HOME ERROR!" + String(counthomeerror));
-    counthomeerror = counthomeerror + 1;
-    if (counthomeerror == 3)
-    {
-      ESP.restart();
-    }
-    else
-    {
-      homex();
-    }
   }
 }
