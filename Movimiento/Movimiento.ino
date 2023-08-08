@@ -3,6 +3,7 @@
 #include "SD.h"
 #include "SPI.h"
 #include <TimeLib.h>
+// SD ACTION
 unsigned long previousmillis_SD = 0; // Variable para almacenar el tiempo anterior
 unsigned long interval_SD = 300000;  // Intervalo de tiempo desea
 // SD PINS
@@ -11,29 +12,33 @@ unsigned long interval_SD = 300000;  // Intervalo de tiempo desea
 #define MOSI 23
 #define CS 5
 SPIClass spi = SPIClass(VSPI);
-// setup and objects stepper motors
+// DATA SD READ
+String myString;
+// SETUP AND OBJECTS STEPPER MOTORS
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;
 const int LIMIT_X_SWITCH_PIN = 15;
-const int MOTOR_F_STEP_PIN = 33;      // 33
-const int MOTOR_F_DIRECTION_PIN = 32; // 32
+const int MOTOR_F_STEP_PIN = 33;
+const int MOTOR_F_DIRECTION_PIN = 32;
 const int LIMIT_FUNNEL_SWITCH_PIN = 13;
 const int ENABLE_MOTORS = 26;
 ESP_FlexyStepper stepper_DISK;
 ESP_FlexyStepper stepper_FUNNEL;
 int counthomeerror = 0;
-// Sensors and actuator pins
+// ACTUATOR AND SENSOR
 const int pumpwater = 2;
 const int imanencoder = 0;
-// Control global variables
-boolean statesbotellas[] = {1, 1, 1, 1};
+// BAT READ DATA
 int batin = 12;
 float voltaje = 0; // static x now
+// Control global variables
+boolean statesbotellas[] = {1, 1, 1, 1};
+// ALARM TASK 1
+// DAY,HOUR,MINUTE,SECOND
 int task1[] = {31, 13, 30, 0};
 int task2[] = {2, 12, 30, 0};
 int task3[] = {4, 12, 30, 0};
 int task4[] = {6, 12, 30, 0};
-String myString;
 
 void setup()
 {
