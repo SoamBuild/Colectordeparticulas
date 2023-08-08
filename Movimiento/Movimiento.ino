@@ -1,8 +1,16 @@
 #include <ESP_FlexyStepper.h>
-unsigned long tarea_inicio1;
-unsigned long tarea_inicio2;
-unsigned long tarea_inicio3;
-unsigned long tarea_inicio4;
+#include "FS.h"
+#include "SD.h"
+#include "SPI.h"
+#include <TimeLib.h>
+unsigned long previousmillis_SD = 0; // Variable para almacenar el tiempo anterior
+unsigned long interval_SD = 300000;  // Intervalo de tiempo desea
+// SD PINS
+#define SCK 18
+#define MISO 4
+#define MOSI 23
+#define CS 5
+SPIClass spi = SPIClass(VSPI);
 // setup and objects stepper motors
 const int MOTOR_X_STEP_PIN = 27;
 const int MOTOR_X_DIRECTION_PIN = 14;
@@ -15,16 +23,21 @@ ESP_FlexyStepper stepper_DISK;
 ESP_FlexyStepper stepper_FUNNEL;
 int counthomeerror = 0;
 // Sensors and actuator pins
-int pumpwater = 2;
-int imanencoder = 0;
+const int pumpwater = 2;
+const int imanencoder = 0;
 // Control global variables
 boolean statesbotellas[] = {1, 1, 1, 1};
+int batin = 12;
+float voltaje = 0; // static x now
+int task1[] = {31, 13, 30, 0};
+int task2[] = {2, 12, 30, 0};
+int task3[] = {4, 12, 30, 0};
+int task4[] = {6, 12, 30, 0};
+String myString;
+
 void setup()
 {
-  tarea_inicio1 = millis();
-  tarea_inicio2 = millis();
-  tarea_inicio3 = millis();
-  tarea_inicio4 = millis();
+
   Serial.begin(115200);
   pinMode(imanencoder, INPUT_PULLUP);
   pinMode(pumpwater, OUTPUT);
@@ -35,44 +48,23 @@ void setup()
   stepper_FUNNEL.connectToPins(MOTOR_F_STEP_PIN, MOTOR_F_DIRECTION_PIN);
   stepper_DISK.connectToPins(MOTOR_X_STEP_PIN, MOTOR_X_DIRECTION_PIN);
   homex();
+  movex(600);
   homefunnel();
   digitalWrite(ENABLE_MOTORS, HIGH);
+  spi.begin(SCK, MISO, MOSI, CS);
+  if (!SD.begin(CS, spi, 80000000))
+  {
+    Serial.println("Card Mount Failed");
+    ESP.restart();
+    return;
+  }
+  else
+  {
+    Serial.println("SD Mount OK");
+  }
 }
 void loop()
 {
-  unsigned long tiempo_transcurrido1 = millis() - tarea_inicio1;
-  unsigned long tiempo_transcurrido2 = millis() - tarea_inicio2;
-  unsigned long tiempo_transcurrido3 = millis() - tarea_inicio3;
-  unsigned long tiempo_transcurrido4 = millis() - tarea_inicio4;
-
-  if (tiempo_transcurrido1 >= 172800000)
-  { // Cambiamos el tiempo a 2
-    tarea_inicio1 = millis();
-  }
-  if (tiempo_transcurrido2 >= 345600000)
-  { // Cambiamos el tiempo 4
-    searchbottle(0);
-    tarea_inicio2 = millis();
-  }
-  if (tiempo_transcurrido3 >= 518400000)
-  { // Cambiamos el tiempo a 6
-    searchbottle(1);
-    tarea_inicio3 = millis();
-  }
-  if (tiempo_transcurrido4 >= 691200000)
-  { // Cambiamos el tiempo a 8
-    searchbottle(3);
-    tarea_inicio4 = millis();
-  }
-  /*
-    searchbottle(0);
-    delay(2000);
-    searchbottle(1);
-    delay(2000);
-    searchbottle(2);
-    delay(2000);
-    searchbottle(3);
-  */
 }
 void searchbottle(int idbotella)
 {
