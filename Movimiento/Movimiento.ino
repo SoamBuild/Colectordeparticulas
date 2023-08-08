@@ -110,9 +110,7 @@ void loop()
     ROUTINE_REGISTRY(voltaje);
   }
 
-  // Resto del código del programa
-
-  if (day() == task1[0] && hour() == task1[1] && minute() == task1[2] && second() == task1[3])
+    if (day() == task1[0] && hour() == task1[1] && minute() == task1[2] && second() == task1[3])
   {
     Serial.println("Ejecutando tarea 1");
     searchbottle(0);
